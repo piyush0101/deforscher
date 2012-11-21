@@ -5,14 +5,15 @@ import net.liftweb.json.JsonDSL._
 import collection.mutable
 import java.util.Map.Entry
 import java.util
+import scala.collection.immutable._
 
-class DependenciesJson {
+class JsonCreator {
 
   case class Node(name: String, group: Int)
 
   case class Link(source: Int, target: Int, value: Int)
 
-  def toJson(dependencies: java.util.HashMap[String, List[String]]) {
+  def toJson(dependencies: Map[String, List[String]]) {
 
     val nodes = extractNodes(dependencies)
     val links = extractLinks(dependencies)
@@ -34,13 +35,13 @@ class DependenciesJson {
     json
   }
 
-
-  def extractLinks(dependencies: util.HashMap[String, List[String]]): Any = {
-    dependencies.entrySet().toArray()[String].map((e: Entry) => (java.util.List(e.getValue)))
+  private def extractLinks(dependencies: Map[String, List[String]]): Iterable[Link] = {
+    for (i <- dependencies; j <- i._2) yield Link(i._1.length, j.length, 0);
   }
 
-  def extractNodes(dependencies: util.HashMap[String, List[String]]): Any = {
-    dependencies.keySet().toArray[String]().map((n: String) => Node(n, 1))
+  private def extractNodes(dependencies: Map[String, List[String]]): Iterable[Node] = {
+    val nodes = dependencies.map(n => Node(n._1, 1))
+    nodes
   }
 
 }

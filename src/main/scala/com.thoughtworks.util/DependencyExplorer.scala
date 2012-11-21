@@ -9,7 +9,7 @@ class DependencyExplorer(classFinder: ClassFinder, dependencyFinder: DependencyF
     var dependencies = new mutable.HashMap[String, util.List[String]]()
     val classes = classFinder.findClasses()
 
-    classes.foreach((clazz: String) => dependencies += clazz -> dependencyFinder.findDependencies(clazz))
+    classes.foreach((clazz: String) => dependencies += clazz -> dependencyFinder.findDependencies())
 
     dependencies
   }
