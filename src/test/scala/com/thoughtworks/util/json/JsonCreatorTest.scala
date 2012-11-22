@@ -3,7 +3,6 @@ package com.thoughtworks.util.json
 import org.scalatest.{FlatSpec, FunSuite}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
-import net.liftweb.json.JsonAST._
 import net.liftweb.json.JsonAST.{JString, JValue, JField}
 import org.scalatest.matchers.ShouldMatchers
 import scala.Some
@@ -103,6 +102,37 @@ class JsonCreatorTest extends FlatSpec with ShouldMatchers {
     }
 
     links should have size(1)
+  }
+
+  "JsonCreator" should "produce json with three nodes when one node has dependencies as well as is a dependency of some other node" in {
+    val jsonProducer = new JsonCreator
+    val dependencies = Map("com.thoughtworks.analysis.A" -> List("com.thoughtworks.analysis.B"),
+                           "com.thoughtworks.analysis.C" -> List("com.thoughtworks.analysis.A"))
+    val json = jsonProducer.toJson(dependencies)
+
+    val nodes: List[JValue] = json filter {
+      case JField("name", _) => true
+      case _ => false
+    }
+
+    nodes should have size(3)
+
+  }
+
+  "JsonCreator" should "produce json with two links when one node has dependencies as well as is a dependency of some other node" in {
+    val jsonProducer = new JsonCreator
+    val dependencies = Map("com.thoughtworks.analysis.A" -> List("com.thoughtworks.analysis.B"),
+                           "com.thoughtworks.analysis.C" -> List("com.thoughtworks.analysis.A"))
+    val json = jsonProducer.toJson(dependencies)
+
+    val links: List[JValue] = json filter {
+      case JField("source", _) => true
+      case _ => false
+    }
+
+    println(compact(render(json)))
+    links should have size(2)
+
   }
 
 }

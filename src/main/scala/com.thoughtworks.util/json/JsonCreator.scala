@@ -16,7 +16,7 @@ class JsonCreator {
 
   case class Link(source: Int, target: Int, value: Int)
 
-  def toJson(dependencies: Map[String, List[String]]) : JObject = {
+  def toJson(dependencies: Map[String, List[String]]): JObject = {
 
     val nodes = extractNodes(dependencies)
     val links = extractLinks(dependencies, nodes.toList)
@@ -40,7 +40,9 @@ class JsonCreator {
   }
 
   private def extractLinks(dependencies: Map[String, List[String]], nodes: List[Node]): Iterable[Link] = {
-    for (i <- dependencies; j <- i._2) yield Link(nodes.indexOf(i._1), nodes.indexOf(j), 0)
+    for (i <- dependencies; j <- i._2)
+    yield Link(nodes.indexWhere((n: Node) => n.name.equals(i._1)),
+                nodes.indexWhere((n: Node) => n.name.equals(j)), 0)
   }
 
   private def extractNodes(dependencies: Map[String, List[String]]): List[Node] = {
@@ -60,11 +62,11 @@ class JsonCreator {
     moreNodes
   }
 
-  private def findNode(nodes: Iterable[Node], name: String) : Boolean = {
-      nodes.find((n: Node) => n.name.equals(name)) match {
-        case Some(n) => true
-        case None => false
-      }
+  private def findNode(nodes: Iterable[Node], name: String): Boolean = {
+    nodes.find((n: Node) => n.name.equals(name)) match {
+      case Some(n) => true
+      case None => false
+    }
   }
 
 }
