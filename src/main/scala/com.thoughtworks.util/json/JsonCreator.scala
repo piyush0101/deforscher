@@ -45,13 +45,19 @@ class JsonCreator {
 
   private def extractNodes(dependencies: Map[String, List[String]]): List[Node] = {
     val nodes = dependencies.map(n => Node(n._1, 1))
-    var moreNodes = new mutable.LinkedList[Node]
+    var moreNodes = findNodesWhichAreOnlyInTheDependencyList(dependencies, nodes)
+    nodes.foreach((n: Node) => moreNodes = moreNodes :+ n)
+    moreNodes.toList
+  }
+
+  private def findNodesWhichAreOnlyInTheDependencyList
+  (dependencies: Map[String, List[String]], nodes: Iterable[Node]): mutable.LinkedList[Node] = {
+    var moreNodes = new mutable.LinkedList[Node]()
     dependencies.values.foreach((l: List[String]) =>
       l.foreach((d: String) =>
         if (!findNode(nodes, d))
           moreNodes = moreNodes :+ Node(d, 1)))
-    nodes.foreach((n: Node) => moreNodes = moreNodes :+ n)
-    moreNodes.toList
+    moreNodes
   }
 
   private def findNode(nodes: Iterable[Node], name: String) : Boolean = {
