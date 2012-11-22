@@ -1,4 +1,4 @@
-name := "dependency-explorer"
+name := "deforscher"
 
 version := "1.0"
 
