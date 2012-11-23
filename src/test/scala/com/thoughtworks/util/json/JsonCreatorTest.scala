@@ -3,7 +3,7 @@ package com.thoughtworks.util.json
 import org.scalatest.{FlatSpec, FunSuite}
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
-import net.liftweb.json.JsonAST.{JString, JValue, JField}
+import net.liftweb.json.JsonAST.{JInt, JString, JValue, JField}
 import org.scalatest.matchers.ShouldMatchers
 import scala.Some
 
@@ -130,9 +130,27 @@ class JsonCreatorTest extends FlatSpec with ShouldMatchers {
       case _ => false
     }
 
-    println(compact(render(json)))
     links should have size(2)
 
+  }
+
+  "Link" should "have correct source and target values" in {
+    val jsonProducer = new JsonCreator
+    val dependencies = Map("com.thoughtworks.analysis.A" -> List("com.thoughtworks.analysis.B"))
+    val json = jsonProducer.toJson(dependencies)
+
+    val source: List[JValue] = json filter {
+      case JField("source", _) => true
+      case _ => false
+    }
+
+    val target: List[JValue] = json filter {
+      case JField("target", _) => true
+      case _ => false
+    }
+
+    assert(source.contains(JField("source", JInt(1))))
+    assert(target.contains(JField("target", JInt(0))))
   }
 
 }
