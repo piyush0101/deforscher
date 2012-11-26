@@ -42,7 +42,7 @@ class JsonCreator {
   private def extractLinks(dependencies: Map[String, List[String]], nodes: List[Node]): Iterable[Link] = {
     for (i <- dependencies; j <- i._2)
     yield Link(nodes.indexWhere((n: Node) => n.name.equals(i._1)),
-                nodes.indexWhere((n: Node) => n.name.equals(j)), 0)
+                nodes.indexWhere((n: Node) => n.name.equals(j)), 1)
   }
 
   private def extractNodes(dependencies: Map[String, List[String]]): List[Node] = {
