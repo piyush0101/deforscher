@@ -6,10 +6,10 @@ import java.util.List;
 
 public class DependencyFinder {
 
-    private final DependencyVisitor visitor;
+    private final FieldDependencyVisitor visitor;
     private final ClassReader reader;
 
-    public DependencyFinder(DependencyVisitor visitor, ClassReader reader) {
+    public DependencyFinder(FieldDependencyVisitor visitor, ClassReader reader) {
         this.visitor = visitor;
         this.reader = reader;
     }
